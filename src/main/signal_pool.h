@@ -46,5 +46,5 @@ std::vector<typename signal_pool<T, signal_type>::signal_ptr>
 
 } // namespace
 
-#endif // MAIN_SIGNAL_POOL_H
+#endif // MAIN_SIGNAL_POOL_H_
 
