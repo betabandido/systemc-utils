@@ -30,7 +30,8 @@ void run_test(test_function func) {
   default:
     {
       int status;
-      waitpid(pid, &status, 0);
+      if (waitpid(pid, &status, 0) != pid)
+        throw std::runtime_error("Error waiting for process");
       if (!WIFEXITED(status))
         throw std::runtime_error("Test process ended unexpectedly");
       if (WEXITSTATUS(status))
