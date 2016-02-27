@@ -8,7 +8,6 @@
 #include <cstdlib>
 #include <stdexcept>
 
-#include <boost/format.hpp>
 #include <gtest/gtest.h>
 
 namespace sc_util {
@@ -26,12 +25,8 @@ void run_test(test_function func) {
     throw std::runtime_error("Error forking process");
   case 0:
     try { func(); }
-    catch (const std::exception& e) {
-      std::cout << boost::format("Exception caught %1%\n") % e.what();
-      exit(1);
-    }
     catch (...) { exit(1); }
-    exit(0);
+    exit(::testing::Test::HasFailure());
   default:
     {
       int status;
@@ -48,12 +43,12 @@ void run_test(test_function func) {
 } // namespace
 
 /** Declares a SystemC test. */
-#define SYSTEMC_TEST(test_case_name, test_name) \
-  void name##_impl();                           \
-  TEST(test_case_name, test_name) {             \
-    sc_util::run_test(name##_impl);             \
-  }                                             \
-  void name##_impl()
+#define SYSTEMC_TEST(test_case_name, test_name)             \
+  void test_case_name##_##test_name##_impl();               \
+  TEST(test_case_name, test_name) {                         \
+    sc_util::run_test(test_case_name##_##test_name##_impl); \
+  }                                                         \
+  void test_case_name##_##test_name##_impl()
 
 #endif // MAIN_TEST_FUNC_H_
 
