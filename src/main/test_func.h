@@ -1,9 +1,15 @@
 #ifndef MAIN_TEST_FUNC_H_
 #define MAIN_TEST_FUNC_H_
 
-#include <gtest/gtest.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+#include <cstdlib>
+#include <stdexcept>
 
 #include <boost/format.hpp>
+#include <gtest/gtest.h>
 
 namespace sc_util {
 
