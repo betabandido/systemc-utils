@@ -1,0 +1,29 @@
+import os.path
+
+# TODO use env variables
+GTEST_PATH = '/Users/vjimenez/soft/googletest/googletest/install'
+SYSTEMC_PATH = '/Users/vjimenez/soft/systemc-2.3.1/install-dir'
+
+env = Environment(CXXFLAGS='-std=c++14 -O2',
+                  CPPPATH=['../main',
+                           os.path.join(GTEST_PATH, 'include'),
+                           os.path.join(SYSTEMC_PATH, 'include')],
+                  LIBPATH=[os.path.join(GTEST_PATH, 'lib'),
+                           # TODO make it platform-independent
+                           os.path.join(SYSTEMC_PATH, 'lib-macosx64')])
+
+if not env.GetOption('clean'):
+  conf = Configure(env)
+  if not conf.CheckLibWithHeader(
+      'gtest', 'gtest/gtest.h', 'cxx'):
+    print 'Could not find Google Test'
+    Exit(1)
+  if not conf.CheckLibWithHeader(
+      'systemc', 'systemc', 'cxx'):
+    print 'Could not find SystemC'
+    Exit(1)
+  env = conf.Finish()
+
+VariantDir('build', '.', duplicate=0)
+env.Program('build/signal_pool_test', 'build/signal_pool_test.cc')
+
